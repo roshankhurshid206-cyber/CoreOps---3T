@@ -1,0 +1,14 @@
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+*.tfstate
+*.tfstate.*
+*.tfvars
+!terraform/*.tfvars
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*~

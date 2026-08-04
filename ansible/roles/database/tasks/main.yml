@@ -1,0 +1,18 @@
+---
+# The MySQL engine itself is managed by Terraform (RDS module).
+# This role provisions the database client tooling and validates
+# that the compute tier can reach the isolated storage tier.
+- name: Install MySQL client and Python bindings
+  ansible.builtin.apt:
+    name:
+      - default-mysql-client
+      - python3-pymysql
+    state: present
+
+- name: Confirm reachability to the RDS endpoint
+  ansible.builtin.command:
+    cmd: "mysql -h {{ db_host }} -P {{ db_port }} -u {{ db_user }} -p{{ db_password }} -e 'SHOW DATABASES;'"
+  register: rds_probe
+  changed_when: false
+  failed_when: rds_probe.rc != 0
+  when: db_host | length > 0

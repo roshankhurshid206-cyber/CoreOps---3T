@@ -1,0 +1,16 @@
+---
+- name: Configure CoreOps-3T compute and storage tiers
+  hosts: role_webserver
+  become: true
+  gather_facts: true
+  roles:
+    - common
+    - webserver
+
+- name: Configure database clients on the storage tier
+  hosts: role_database
+  become: true
+  gather_facts: true
+  roles:
+    - common
+    - database

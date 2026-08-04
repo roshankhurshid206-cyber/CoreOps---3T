@@ -1,0 +1,12 @@
+---
+# Shared variables for all CoreOps-3T hosts (dynamic inventory).
+ansible_python_interpreter: /usr/bin/python3
+ansible_user: ubuntu
+
+# Database connection details consumed by the webserver role.
+# These are populated from Terraform outputs in real pipelines.
+db_host: "{{ lookup('env', 'DB_HOST') | default('', true) }}"
+db_port: 3306
+db_name: appdb
+db_user: "{{ lookup('env', 'DB_USER') | default('admin', true) }}"
+db_password: "{{ lookup('env', 'DB_PASSWORD') | default('', true) }}"
