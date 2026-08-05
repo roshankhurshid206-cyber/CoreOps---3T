@@ -21,6 +21,8 @@ jobs:
     defaults:
       run:
         working-directory: ${{ env.TF_WORKING_DIR }}
+    outputs:
+      db_host: ${{ steps.tfout.outputs.db_host }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -56,8 +58,8 @@ jobs:
       - name: Export Terraform Outputs
         id: tfout
         run: |
-          echo "db_host=$(terraform output -raw db_address)" >> "$GITHUB_ENV"
-          echo "web_ips=$(terraform output -json web_private_ips | jq -r 'join(",")')" >> "$GITHUB_ENV"
+          echo "db_host=$(terraform output -raw db_address)" >> "$GITHUB_OUTPUT"
+          echo "web_ips=$(terraform output -json web_private_ips | jq -r 'join(",")')" >> "$GITHUB_OUTPUT"
 
   configure:
     name: Ansible Configuration Management
@@ -91,7 +93,7 @@ jobs:
       - name: Run Ansible against dynamic AWS inventory
         working-directory: ansible
         env:
-          DB_HOST: ${{ env.db_host }}
+          DB_HOST: ${{ needs.terraform.outputs.db_host }}
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: ansible-playbook -i inventory_aws_ec2.yml site.yml
