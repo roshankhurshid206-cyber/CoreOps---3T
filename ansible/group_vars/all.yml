@@ -9,4 +9,4 @@ db_host: "{{ lookup('env', 'DB_HOST') | default('', true) }}"
 db_port: 3306
 db_name: appdb
 db_user: "{{ lookup('env', 'DB_USER') | default('admin', true) }}"
-db_password: "{{ lookup('env', 'DB_PASSWORD') | default('', true) }}"
+db_password: "{{ lookup('env', 'DB_PASSWORD') | mandatory }}"
